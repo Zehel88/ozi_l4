@@ -20,6 +20,7 @@ end
 function l4_MAIN_OpeningFcn(hObject, eventdata, handles, varargin)
 handles.output = hObject;
 guidata(hObject, handles);
+set(handles.l_Key,'Value',5)
 
 function varargout = l4_MAIN_OutputFcn(hObject, eventdata, handles) 
 varargout{1} = handles.output;
@@ -46,6 +47,7 @@ if strcmp(get(handles.edit1,'Enable'),'on')==1
         set(handles.edit1,'String',['Выбран файл: ',FIN.name]);
         set(handles.edit1,'Enable','inactive')
         set(handles.edit1,'BackgroundColor',[.9 .9 .9])
+        save('FIN.mat','FIN');
     else
         %     Если не выбран
     end
@@ -54,4 +56,39 @@ else
     set(handles.edit1,'Enable','on');
     set(handles.edit1,'String','Зашифруй меня');
     set(handles.filebtn,'String','Выбрать файл');
+end
+
+function l_Block_Callback(hObject, eventdata, handles)
+
+function l_Block_CreateFcn(hObject, eventdata, handles)
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+function l_Key_Callback(hObject, eventdata, handles)
+switch get(handles.l_Key,'Value')
+    case 1
+        set(handles.edit2,'String',dec2bin((randi(255))))
+    case 2
+        set(handles.edit2,'String',dec2bin((randi(1023))))
+    case 3
+        set(handles.edit2,'String',dec2bin((randi(4095))))
+    case 4
+        set(handles.edit2,'String',dec2bin((randi(16383))))
+    case 5
+        set(handles.edit2,'String',dec2bin((randi(65535))))
+end
+
+
+
+function l_Key_CreateFcn(hObject, eventdata, handles)
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+function edit2_Callback(hObject, eventdata, handles)
+
+function edit2_CreateFcn(hObject, eventdata, handles)
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
 end

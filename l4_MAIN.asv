@@ -34,16 +34,58 @@ end
 
 function filebtn_Callback(hObject, eventdata, handles) 
 %%Кнопка выбора файла
-% Получаем данные о желаемом файле
-[FIN.name FIN.path F_ind]=uigetfile('*.*');
-% Проверка на выбран ли файл 
-if F_ind==1
-%     Если выбран
-% Получаем его содержимое
-FIN.DaTa=fread(fopen(strcat(FIN.path,FIN.name)))';
-set(handles.filebtn,'String','Ввести сообщение')
-set(handles.edit1,'String','Ввести сообщение')
+if strcmp(get(handles.edit1,'Enable'),'on')==1
+    % Получаем данные о желаемом файле
+    [FIN.name FIN.path F_ind]=uigetfile('*.*');
+    % Проверка на выбран ли файл
+    if F_ind==1
+        %     Если выбран
+        % Получаем его содержимое
+        FIN.DaTa=fread(fopen(strcat(FIN.path,FIN.name)))';
+        set(handles.filebtn,'String','Ввести сообщение')
+        set(handles.edit1,'String',['Выбран файл: ',FIN.name]);
+        set(handles.edit1,'Enable','inactive')
+        set(handles.edit1,'BackgroundColor',[.9 .9 .9])
+        save('FIN.mat','FIN');
+    else
+        %     Если не выбран
+    end
 else
-%     Если не выбран
-    
+    set(handles.edit1,'BackgroundColor',[1 1 1]);
+    set(handles.edit1,'Enable','on');
+    set(handles.edit1,'String','Зашифруй меня');
+    set(handles.filebtn,'String','Выбрать файл');
+end
+
+function l_Block_Callback(hObject, eventdata, handles)
+
+function l_Block_CreateFcn(hObject, eventdata, handles)
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+function l_Key_Callback(hObject, eventdata, handles)
+switch get(handles.l_Key,'Value')
+    case 1
+        disp('8')
+    case 2
+        disp('10')
+    case 3
+        disp('12')
+    case 4
+        
+end
+
+
+
+function l_Key_CreateFcn(hObject, eventdata, handles)
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+function edit2_Callback(hObject, eventdata, handles)
+
+function edit2_CreateFcn(hObject, eventdata, handles)
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
 end
