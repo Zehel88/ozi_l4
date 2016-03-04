@@ -92,3 +92,69 @@ function edit2_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+
+function edit3_Callback(hObject, eventdata, handles)
+
+function edit3_CreateFcn(hObject, eventdata, handles)
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+function pushbutton2_Callback(hObject, eventdata, handles)
+%% Зашифровать
+clc
+% Получаем сообщение
+load('FIN.mat');
+B_S=get(handles.l_Block,'String');
+l_B=str2double(B_S{get(handles.l_Block,'Value')});
+% Приводим его к двоичному виду
+Mes=reshape(dec2bin(FIN.DaTa)',1,numel(dec2bin(FIN.DaTa)))
+
+if mod(numel(Mes),l_B)==0
+    Mes=reshape(Mes,numel(Mes)/l_B,l_B)
+else
+    Mes=strcat(dec2bin(0,l_B-mod(numel(Mes),l_B)),Mes);
+    Mes=reshape(Mes,numel(Mes)/l_B,l_B)
+end
+
+R=str2double(get(handles.edit5,'String'));
+K=(get(handles.edit2,'String'));
+K=K(end-(l_B/2)+1:end);
+
+[r_Mes c_Mes]=size(Mes);
+
+for i=1:r_Mes
+    Mes_1h=Mes(i,1:l_B/2);
+    Mes_2h=Mes(i,l_B/2+1:end);
+   for j=1:R
+        for n=1:l_B/2
+            buf_Mes(n)=num2str(double(~strcmp(Mes_1h(n),K(n))));
+        end
+        
+        Mes_S=[Mes_2h buf_Mes];
+   end
+   Mes_S
+end
+
+
+
+
+function edit4_Callback(hObject, eventdata, handles)
+
+function edit4_CreateFcn(hObject, eventdata, handles)
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+function pushbutton3_Callback(hObject, eventdata, handles)
+%% Расшифровать
+
+
+
+function edit5_Callback(hObject, eventdata, handles)
+function edit5_CreateFcn(hObject, eventdata, handles)
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
