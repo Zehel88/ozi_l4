@@ -126,21 +126,16 @@ K=K(end-(l_B/2)+1:end);
 [r_Mes c_Mes]=size(Mes);
 
 for i=1:r_Mes
-    buf_Mes=Mes(i,:);
+    Mes_1h=Mes(i,1:l_B/2);
+    Mes_2h=Mes(i,l_B/2+1:end);
    for j=1:R
         for n=1:l_B/2
-%             buf_Mes(l_B/2+n:end)
-%             num2str(double(strcmp(buf_Mes(n),K(n))))
-%             strcat()
-%             whos ans
-%             return
-%             num2str(strcmp(buf_Mes(n),K(n)))
-            buf_Mes=strcat(buf_Mes(l_B/2+1:end),num2str(double(strcmp(buf_Mes(1),K(n)))));
+            buf_Mes(n)=num2str(double(~strcmp(Mes_1h(n),K(n))));
         end
         
-        buf_Mes
-        return
+        Mes_S()=[Mes_2h buf_Mes];
    end
+   Mes_S
 end
 
 

@@ -110,10 +110,10 @@ load('FIN.mat');
 B_S=get(handles.l_Block,'String');
 l_B=str2double(B_S{get(handles.l_Block,'Value')});
 % Приводим его к двоичному виду
-Mes=reshape(dec2bin(FIN.DaTa)',1,numel(dec2bin(FIN.DaTa)))
+Mes=reshape(dec2bin(FIN.DaTa,8)',1,numel(dec2bin(FIN.DaTa)));
 
 if mod(numel(Mes),l_B)==0
-    Mes=reshape(Mes,numel(Mes)/l_B,l_B)
+    Mes=reshape(Mes,numel(Mes)/l_B,l_B);
 else
     Mes=strcat(dec2bin(0,l_B-mod(numel(Mes),l_B)),Mes);
     Mes=reshape(Mes,numel(Mes)/l_B,l_B)
@@ -126,20 +126,27 @@ K=K(end-(l_B/2)+1:end);
 [r_Mes c_Mes]=size(Mes);
 
 for i=1:r_Mes
-    Mes_1h=Mes(i,1:l_B/2);
-    Mes_2h=Mes(i,l_B/2+1:end);
-   for j=1:R
+    Mes_S(i,:)=Mes(i,:);
+    for j=1:R
+        Mes_1h=Mes_S(i,1:l_B/2);
+        Mes_2h=Mes_S(i,l_B/2+1:end);
         for n=1:l_B/2
             buf_Mes(n)=num2str(double(~strcmp(Mes_1h(n),K(n))));
         end
         
-        Mes_S=[Mes_2h buf_Mes];
-   end
-   Mes_S
+        Mes_S(i,:)=[Mes_2h buf_Mes];
+    end
 end
+Mes_S
+Mes_S=Mes_S';
+for i=1:numel(Mes_S)/8
+%     l_B*i-l_B+1
+%     l_B*i
+    M(i,:)=Mes_S(8*i-8+1:8*i);
+end
+M
 
-
-
+set(handles.edit3,'String',char(bin2dec(M))')
 
 function edit4_Callback(hObject, eventdata, handles)
 
