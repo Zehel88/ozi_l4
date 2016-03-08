@@ -56,7 +56,7 @@ if strcmp(get(handles.edit1,'Enable'),'on')==1
 else
     set(handles.edit1,'BackgroundColor',[1 1 1]);
     set(handles.edit1,'Enable','on');
-    set(handles.edit1,'String','Зашифруй меня');
+    set(handles.edit1,'String','Засекреченное сообщение');
     set(handles.filebtn,'String','Выбрать файл');
 end
 
@@ -109,7 +109,8 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 clc
 % Получаем сообщение
 if strcmp(get(handles.edit1,'Enable'),'on')==1
-    FIN.DaTa=unicode2native(get(handles.edit1,'String'))
+    FIN.DaTa=unicode2native(get(handles.edit1,'String'));
+else
 load('FIN.mat')
 end
 % Получаем длину блока данных
@@ -149,24 +150,16 @@ for i=1:r_Mes
         Mes_S(i,:)=[Mes_2h buf_Mes];
     end
 end
-% Mes_S
-
+% Переформируем матрицу
 Mes_S=reshape(Mes_S',1,numel(Mes_S));
-% char(bin2dec(Mes_S(1:16)))
-% return
-% n=n/2;
+
 for i=1:numel(Mes_S)/n
     M(i,:)=Mes_S(n*i-n+1:n*i);
 end
-
-M
-
-
+% Возврщаемся в символьный вид
 Res=native2unicode(bin2dec(M))'
-
-
+% Выводим результат
 set(handles.edit3,'String',(Res))
-% Устанавливаем стандарт кодирования символов
 
 
 
@@ -180,8 +173,55 @@ end
 
 function pushbutton3_Callback(hObject, eventdata, handles)
 %% Расшифровать
-sM=get(handles.edit3,'String');
-double(sM)
+clc
+% Получаем длину блока данных
+B_S=get(handles.l_Block,'String');
+l_B=str2double(B_S{get(handles.l_Block,'Value')});
+n=8;
+% Получаем зашифрованное сообщение
+Mes=dec2bin(unicode2native(get(handles.edit3,'String')));
+Mes=reshape(Mes',numel(Mes),1)';
+% Делим сообщение на блоки необходимого размера
+if mod(numel(Mes),l_B)==0
+    Mes=reshape(Mes,l_B,numel(Mes)/l_B)';
+else
+    Mes=strcat(Mes,dec2bin(0,l_B-mod(numel(Mes),l_B)));
+    Mes=reshape(Mes,l_B,numel(Mes)/l_B)';
+end
+
+% Получаем кол-во раундов
+R=str2double(get(handles.edit5,'String'));
+% Получаем ключ
+K=(get(handles.edit2,'String'));
+% Выбираем ключ
+K=K(end-(l_B/2)+1:end);
+[r_Mes c_Mes]=size(Mes);
+% Дешифруем сообщение
+for i=1:r_Mes
+%     Для каждой строки (каждого блока)
+    Mes_D(i,:)=Mes(i,:);
+%     Выполняем R раундов(шагов)
+    for j=1:R
+%         Правая часть блока
+        Mes_1h=Mes_D(i,1:l_B/2);
+%         Левая часть блока
+        Mes_2h=Mes_D(i,l_B/2+1:end);
+        for m=1:l_B/2
+            buf_Mes(m)=num2str(double(~strcmp(Mes_2h(m),K(m))));  
+        end 
+        Mes_D(i,:)=[buf_Mes Mes_1h];
+    end
+end
+% Переформируем матрицу
+Mes_D=reshape(Mes_D',1,numel(Mes_D));
+
+for i=1:numel(Mes_D)/n
+    M(i,:)=Mes_D(n*i-n+1:n*i);
+end
+% Возврщаемся в символьный вид
+Res=native2unicode(bin2dec(M))'
+% Выводим результат
+set(handles.edit4,'String',(Res))
 
 
 function edit5_Callback(hObject, eventdata, handles)
