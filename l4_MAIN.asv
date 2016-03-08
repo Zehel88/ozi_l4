@@ -109,13 +109,17 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 clc
 % Получаем сообщение
 if strcmp(get(handles.edit1,'Enable'),'on')==1
-    FIN.DaTa=unicode2native(get(handles.edit1,'String'))
+    FIN.DaTa=double(get(handles.edit1,'String'))
+else
 load('FIN.mat')
+FIN
+native
+return
 end
 % Получаем длину блока данных
 B_S=get(handles.l_Block,'String');
 l_B=str2double(B_S{get(handles.l_Block,'Value')});
-n=8;
+n=16;
 % Приводим сообщение к двоичному/однострочному виду
 Mes=reshape(dec2bin(FIN.DaTa,n)',1,numel(dec2bin(FIN.DaTa,n)));
 % Делим сообщение на блоки необходимого размера
@@ -162,7 +166,7 @@ end
 M
 
 
-Res=native2unicode(bin2dec(M))'
+Res=char(bin2dec(M))'
 
 
 set(handles.edit3,'String',(Res))
